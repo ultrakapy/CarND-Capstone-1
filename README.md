@@ -1,3 +1,43 @@
+[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+
+# The Project
+This project uses ROS nodes to implement core functionality of the autonomous vehicle system, including traffic light detection, control, and waypoint following! The code is tested using the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases) and is executed on the Udacity self-driving car Carla.
+
+![image alt text](imgs/Udacity-Carla.jpg)
+
+# Team Santa Claus
+* Mark Brörkens: broerkens (at) gmail.com
+* Kapy Kangombe: kapambwe (at) gmail.com
+* Utkarsh Dubey: utkarsh.dubey.2 (at) gmail.com
+
+# System Architecture
+Description from Udacity Classroom
+The following is a system architecture diagram showing the ROS nodes and topics used in the project. You can refer to the diagram throughout the project as needed. The ROS nodes and topics shown in the diagram are described briefly in the Code Structure section below, and more detail is provided for each node in later classroom concepts of this lesson.
+
+![image alt text](imgs/final-project-ros-graph-v2.png)
+
+# Code Structure
+Below is a brief overview of the repo structure, along with descriptions of the ROS nodes. 
+
+##  /ros/src/tl_detector/
+This package contains the traffic light detection node.
+![image alt text](imgs/tl-detector-ros-graph.png)
+
+## /ros/src/waypoint_updater/
+This package contains the waypoint updater node
+![image alt text](imgs/waypoint-updater-ros-graph.png)
+
+## /ros/src/twist_controller/
+Carla is equipped with a drive-by-wire (dbw) system, meaning the throttle, brake, and steering have electronic control. This package contains the files that are responsible for control of the vehicle
+![image alt text](imgs/dbw-node-ros-graph.png)
+
+
+
+
+
+
+# from original Readme 
+
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
 Please use **one** of the two installation options, either native **or** docker installation.
