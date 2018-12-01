@@ -1,9 +1,18 @@
 # Development Environment FAQ
+## General Tips and Tricks
+### Q: If you are having trouble with latency when turning on camera images in the simulator, 
+A: try classifying only every third or fourth camera image.
+### Q: If you are uploading your own previous work, 
+A: be sure to make all Python files executable. In Ubuntu, this can be done from the command line with the chmod command. The following command should add executable permissions to all Python files in the specified directory:
+`find /home/workspace/your/directory -type f -iname "*.py" -exec chmod +x {} \;`
 
 # ROS and Similator an the same machine
 ## Linux: Udacity Workspace
 ### Q: On macOS High Sierra, the Web Desktop doesn't open in Safari 12.0.1
 A: Use Google Chrome instead
+### Q: if you are uploading your own previous work, 
+A: you will need to add the folder found in /home/workspace/CarND-Capstone/ros/src/dbw_mkz_msgs to your project.
+
 
 # ROS and simulator on diofferent machines
 ## ROS in Udacity Linux 16.04 Linux VM, Simulator natively on MacOS
