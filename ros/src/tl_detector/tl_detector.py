@@ -11,8 +11,10 @@ import tf
 import cv2
 import yaml
 from scipy.spatial import KDTree
+import time
 
 STATE_COUNT_THRESHOLD = 3
+SAVE_TRAFFIC_LIGHT_IMG = True # Save traffic images to train classifier model.
 
 class TLDetector(object):
     def __init__(self):
@@ -54,6 +56,8 @@ class TLDetector(object):
         self.waypoints_2d = None
         self.waypoint_tree = None
 
+        self.img_count = 0
+
         rospy.spin()
 
     def pose_cb(self, msg):
@@ -70,6 +74,31 @@ class TLDetector(object):
     def traffic_cb(self, msg):
         self.lights = msg.lights
 
+
+    def save_img(self, light, state):
+
+        if SAVE_TRAFFIC_LIGHT_IMG and self.img_count % 30 == 0: # self.img_count to reduce image save
+
+            file_name = "IMG_" + str(time.time()).replace('.','') + '.jpg'
+            #cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+            cv_image = self.bridge.imgmsg_to_cv2(light, "bgr8")
+            img_path = ''
+
+            if state == 0:
+                img_path = "./light_classification/IMGS/RED/" + file_name
+            elif state == 1:
+                img_path = "./light_classification/IMGS/YELLOW/" + file_name
+            elif state == 2:
+                img_path = "./light_classification/IMGS/GREEN/" + file_name
+            else:
+                img_path = "./light_classification/IMGS/UNKNOWN/" + file_name
+
+            cv2.imwrite(img_path, cv_image)
+
+        self.img_count += 1
+
+
+
     def image_cb(self, msg):
         """Identifies red lights in the incoming camera image and publishes the index
             of the waypoint closest to the red light's stop line to /traffic_waypoint
@@ -78,10 +107,12 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
+
         self.has_image = True
         self.camera_image = msg
         light_wp, state = self.process_traffic_lights()
         rospy.logwarn("Closest light wp: {0} \n And light state: {1}".format(light_wp, state))
+
 
         '''
         Publish upcoming red lights at camera frequency.
@@ -130,6 +161,7 @@ class TLDetector(object):
         #    return False
 
         #cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+
 
         #Get classification
         #return self.light_classifier.get_classification(cv_image)
@@ -180,6 +212,10 @@ class TLDetector(object):
                     diff = d
                     closest_light = light
                     line_wp_idx = temp_wp_idx
+
+                if d < 70: # when close traffic light , save image
+                    # To save trainning image
+                    self.save_img(self.camera_image, light.state)
 
         if closest_light:
             state = self.get_light_state(closest_light)
