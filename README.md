@@ -9,6 +9,8 @@ This project uses ROS nodes to implement core functionality of the autonomous ve
 * Mark Brörkens: broerkens (at) gmail.com
 * Kapy Kangombe: kapambwe (at) gmail.com
 * Utkarsh Dubey: utkarsh.dubey.2 (at) gmail.com
+* Ji xiaojie: 33048399 (at) QQ.com
+* NN
 
 # System Architecture
 Description from Udacity Classroom
