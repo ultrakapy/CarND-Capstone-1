@@ -2,15 +2,15 @@
 
 # ROS and Similator an the same machine
 ## Linux: Udacity Workspace
-* Q: On macOS High Sierra, the Web Desktop doesn't open in Safari 12.0.1
-* A: Use Google Chrome instead
+### Q: On macOS High Sierra, the Web Desktop doesn't open in Safari 12.0.1
+A: Use Google Chrome instead
 
 # ROS and simulator on diofferent machines
 ## ROS in Udacity Linux 16.04 Linux VM, Simulator natively on MacOS
 If you have two hosts available you can distribute the load.
 
-* Q: How to setup communication between simulator and ROS on another PC or in a VM
-* A: The simulator expects the ROS Server to listen on port 4567 on the localhost. If you want to move ROS to another host, you need to forward port 4567 of the remote host to localhost. (thanks to [nsanghi's post on slack](https://carnd.slack.com/archives/C6NVDVAQ3/p1504363170000027?thread_ts=1504354174.000031)
+### Q: How to setup communication between simulator and ROS on another PC or in a VM
+A: The simulator expects the ROS Server to listen on port 4567 on the localhost. If you want to move ROS to another host, you need to forward port 4567 of the remote host to localhost. (thanks to [nsanghi's post on slack](https://carnd.slack.com/archives/C6NVDVAQ3/p1504363170000027?thread_ts=1504354174.000031)
   1. install openssh server on ubuntu (Ubuntu terminal)
      `sudo apt install openssh-server`
   1. no chnage in sshd_config file. Still started/restarted the service. (Ubuntu terminal)
@@ -38,5 +38,5 @@ If you have two hosts available you can distribute the load.
   1. left the terminal open
   1. Now I can run ROS on ubuntu and Simulator on mac
 
-* Q: When connecting to ROS that is running on Linux in a VM I am getting the following error message: `"GET /socket.io/?EIO=4&transport=websocket HTTP/1.1" 404`
-* A: update python SocketIO to version 2.1.0 as recommended by https://github.com/blown302/CarND-Capstone/commit/dfb2166bccbfc6cd5226bb4fe31c0e3b20d2bc94#diff-e4083f2d74d0aa28cb6ce89d0a8a9569. 
+### Q: When connecting to ROS that is running on Linux in a VM I am getting the following error message: `"GET /socket.io/?EIO=4&transport=websocket HTTP/1.1" 404`
+A: update python SocketIO to version 2.1.0 as recommended by https://github.com/blown302/CarND-Capstone/commit/dfb2166bccbfc6cd5226bb4fe31c0e3b20d2bc94#diff-e4083f2d74d0aa28cb6ce89d0a8a9569. 
