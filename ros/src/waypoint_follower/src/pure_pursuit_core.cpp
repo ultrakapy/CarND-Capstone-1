@@ -249,7 +249,7 @@ bool PurePursuit::verifyFollowing() const
 //    return false;
 //  }
 
-  return true;
+  return false;
 }
 geometry_msgs::Twist PurePursuit::calcTwist(double curvature, double cmd_velocity) const
 {
