@@ -21,7 +21,7 @@ A: you will need to add the folder found in /home/workspace/CarND-Capstone/ros/s
 If you have two hosts available you can distribute the load.
 
 ### Q: How to setup communication between simulator and ROS on another PC or in a VM
-A: The simulator expects the ROS Server to listen on port 4567 on the localhost. If you want to move ROS to another host, you need to forward port 4567 of the remote host to localhost. (thanks to [nsanghi's post on slack](https://carnd.slack.com/archives/C6NVDVAQ3/p1504363170000027?thread_ts=1504354174.000031)
+A: The simulator expects the ROS Server to listen on port 4567 on the localhost. If you want to move ROS to another host, you need to forward port 4567 of the remote host to localhost. (thanks to [nsanghi's post on slack](https://carnd.slack.com/archives/C6NVDVAQ3/p1504363170000027?thread_ts=1504354174.000031) )
   1. install openssh server on ubuntu (Ubuntu terminal)
      ```
      sudo apt install openssh-server
