@@ -104,3 +104,122 @@ XML example (NOTE: 4th line in XML has a full path, when use those files, maybe 
 
 ```
 predefined_classes.txt is a classes file for labelimg. 
+
+   
+  
+
+
+#### Navigate to CarND-Capstone/training
+NOTICE: change below command '/jixj/term3/p021' to fullpath of CarND-Capstone/training  and change ssd_inception_v2_coco.config line 152, 172, 174, 186, 188 path to fullpath of CarND-Capstone/training   
+    
+#### If Tensorflow dose not install yet, Install TensorFlow version 1.3 by executing
+```
+pip install tensorflow==1.3
+```
+#### Install the following packages
+```
+sudo apt-get install protobuf-compiler python-pil python-lxml python-tk
+sudo pip2 install  Cython
+sudo pip2 install  contextlib2
+sudo pip2 install  jupyter
+sudo pip2 install  matplotlib
+sudo pip2 install  absl-py
+sudo pip2 install  pycocotools
+sudo pip2 install  sklearn
+sudo pip2 install  pandas==0.22.0
+
+```
+#### Clone TensorFlow's models repository from the tensorflow directory by executing
+```
+git clone https://github.com/tensorflow/models.git
+```
+#### Navigate to the models directory in the Command Prompt and execute
+```
+cd models
+
+git checkout f7e99c0
+
+```
+#### Navigate to the ./research folder and execute
+
+```
+wget -O protobuf.zip https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip
+unzip protobuf.zip
+./bin/protoc object_detection/protos/*.proto --python_out=.
+
+export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+
+python setup.py build
+sudo python setup.py install
+
+```
+#### Test environment. If no error, environment is ok
+```
+python object_detection/builders/model_builder_test.py
+
+python ./object_detection/exporter_test.py
+
+```
+
+#### avigate to the CarND-Capstone/training folder
+```
+wget http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_11_06_2017.tar.gz
+tar zxvf ssd_inception_v2_coco_11_06_2017.tar.gz
+
+# delete all files in CarND-Capstone/training/model, CarND-Capstone/training/train, CarND-Capstone/training/test
+
+python xml_to_csv.py 'SimulatorTrack1_Classified_Imgs'
+python generate_tfrecord.py --csv_input=./train/SimulatorTrack1_Classified_Imgs_train.csv --output_path=./train/SimulatorTrack1_Classified_Imgs_train.record
+python generate_tfrecord.py --csv_input=./test/SimulatorTrack1_Classified_Imgs_test.csv --output_path=./test/SimulatorTrack1_Classified_Imgs_test.record
+
+
+
+```
+#### Navigate to models/research 
+```
+
+python ./object_detection/train.py --logtostderr --train_dir=/jixj/term3/p021/model --pipeline_config_path=/jixj/term3/p021/ssd_inception_v2_coco.config
+
+
+#result like:
+#reference connection and already has a device field set to /device:CPU:0
+#INFO:tensorflow:Starting Session.
+#INFO:tensorflow:Saving checkpoint to path /jixj/term3/p021/model/model.ckpt
+#INFO:tensorflow:Starting Queues.
+#INFO:tensorflow:global_step/sec: 0
+#INFO:tensorflow:Recording summary at step 0.
+#INFO:tensorflow:global step 1: loss = 25.6500 (17.872 sec/step)
+#INFO:tensorflow:global step 2: loss = 26.4797 (7.996 sec/step)
+#INFO:tensorflow:global step 3: loss = 22.3657 (7.960 sec/step)
+#INFO:tensorflow:global step 4: loss = 20.3114 (8.018 sec/step)
+#INFO:tensorflow:global step 5: loss = 20.1324 (7.970 sec/step)
+#INFO:tensorflow:Stopping Training.
+#INFO:tensorflow:Finished training! Saving model to disk.
+
+```
+
+
+#### Navigate to the models directory
+```
+git checkout 9a811d95c478b062393debd1559df61490b97149
+
+```
+
+#### Navigate to models/research 
+```
+python ./object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path /jixj/term3/p021/ssd_inception_v2_coco.config --trained_checkpoint_prefix  /jixj/term3/p021/model/model.ckpt-5 --output_directory  /jixj/term3/p021/model
+
+#result like:
+#2018-12-04 22:32:02.758329: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+#2018-12-04 22:32:02.758380: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+#2018-12-04 22:32:02.758389: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+#2018-12-04 22:32:02.758393: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+#2018-12-04 22:32:02.758398: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+#Converted 410 variables to const ops.
+
+
+```
+
+
+Then it will get a frozen_inference_graph.pb in CarND-Capstone/training/model/
+ 
