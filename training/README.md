@@ -109,6 +109,7 @@ predefined_classes.txt is a classes file for labelimg.
   
 
 
+### 4. Train a ssd model(2018-12-05)
 #### Navigate to CarND-Capstone/training
 NOTICE: change below command '/jixj/term3/p021' to fullpath of CarND-Capstone/training  and change ssd_inception_v2_coco.config line 152, 172, 174, 186, 188 path to fullpath of CarND-Capstone/training   
     
@@ -161,7 +162,7 @@ python ./object_detection/exporter_test.py
 
 ```
 
-#### avigate to the CarND-Capstone/training folder
+#### Navigate to the CarND-Capstone/training folder
 ```
 wget http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_11_06_2017.tar.gz
 tar zxvf ssd_inception_v2_coco_11_06_2017.tar.gz
@@ -222,4 +223,38 @@ python ./object_detection/export_inference_graph.py --input_type image_tensor --
 
 
 Then it will get a frozen_inference_graph.pb in CarND-Capstone/training/model/
- 
+   
+  
+### 5. Use the trained model to predict test image (2018-12-05)
+NOTICE:change /jixj/term3/p028/training to your CarND-Capstone/training
+#### Navigate to the CarND-Capstone/training/utils folder
+```
+# delete all files in CarND-Capstone/training/utils/output
+python img_predict.py --model_name=/jixj/term3/p028/training/model/ --path_to_label=/jixj/term3/p028/training/labelmap.pbtxt --test_image_path=test
+
+
+#result like:
+#1 boxes in /jixj/term3/p028/training/utils/test/IMG_154372566237.jpg image tile!
+#('/jixj/term3/p028/training/utils/test/IMG_154372566237.jpg', '-->', 'output/IMG_154372566237.png')
+#1 boxes in /jixj/term3/p028/training/utils/test/IMG_154372184947.jpg image tile!
+#('/jixj/term3/p028/training/utils/test/IMG_154372184947.jpg', '-->', 'output/IMG_154372184947.png')
+#1 boxes in /jixj/term3/p028/training/utils/test/IMG_15437218315.jpg image tile!
+#('/jixj/term3/p028/training/utils/test/IMG_15437218315.jpg', '-->', 'output/IMG_15437218315.png')
+#1 boxes in /jixj/term3/p028/training/utils/test/IMG_154372567036.jpg image tile!
+#('/jixj/term3/p028/training/utils/test/IMG_154372567036.jpg', '-->', 'output/IMG_154372567036.png')
+#1 boxes in /jixj/term3/p028/training/utils/test/IMG_154372544995.jpg image tile!
+#('/jixj/term3/p028/training/utils/test/IMG_154372544995.jpg', '-->', 'output/IMG_154372544995.png')
+#1 boxes in /jixj/term3/p028/training/utils/test/IMG_154372186749.jpg image tile!
+#('/jixj/term3/p028/training/utils/test/IMG_154372186749.jpg', '-->', 'output/IMG_154372186749.png')
+
+
+
+```
+
+
+
+
+
+
+
+
