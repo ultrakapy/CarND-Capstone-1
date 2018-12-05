@@ -1,0 +1,26 @@
+<annotation>
+	<folder>GREEN</folder>
+	<filename>IMG_154375401046.jpg</filename>
+	<path>/home/iquantela/Study/CarND-Capstone/training/RealCarTrack_Classified_Imgs/GREEN/IMG_154375401046.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>green</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>381</xmin>
+			<ymin>83</ymin>
+			<xmax>406</xmax>
+			<ymax>151</ymax>
+		</bndbox>
+	</object>
+</annotation>

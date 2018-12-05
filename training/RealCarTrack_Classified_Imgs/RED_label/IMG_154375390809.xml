@@ -1,0 +1,26 @@
+<annotation>
+	<folder>RED</folder>
+	<filename>IMG_154375390809.jpg</filename>
+	<path>/home/iquantela/Study/CarND-Capstone/training/RealCarTrack_Classified_Imgs/RED/IMG_154375390809.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>red</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>367</xmin>
+			<ymin>87</ymin>
+			<xmax>388</xmax>
+			<ymax>152</ymax>
+		</bndbox>
+	</object>
+</annotation>
