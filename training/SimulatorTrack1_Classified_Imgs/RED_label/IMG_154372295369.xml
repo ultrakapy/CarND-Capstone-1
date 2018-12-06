@@ -1,0 +1,26 @@
+<annotation>
+	<folder>RED</folder>
+	<filename>IMG_154372295369.jpg</filename>
+	<path>/jixj/term3/p015/SimulatorTrack1_Classified_Imgs/RED/IMG_154372295369.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>red</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>752</xmin>
+			<ymin>456</ymin>
+			<xmax>781</xmax>
+			<ymax>518</ymax>
+		</bndbox>
+	</object>
+</annotation>

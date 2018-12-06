@@ -1,0 +1,26 @@
+<annotation>
+	<folder>YELLOW</folder>
+	<filename>IMG_15437229463.jpg</filename>
+	<path>/jixj/term3/p015/SimulatorTrack1_Classified_Imgs/YELLOW/IMG_15437229463.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>yellow</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>19</xmin>
+			<ymin>548</ymin>
+			<xmax>33</xmax>
+			<ymax>570</ymax>
+		</bndbox>
+	</object>
+</annotation>
