@@ -13,7 +13,9 @@ def xml_to_csv(pathlist):
     for xml_file in pathlist:
         tree = ET.parse(xml_file)
         root = tree.getroot()
-        path = root.find('path').text.replace('/jixj/term3/p015', os.getcwd())
+        path = root.find('path').text
+        path = path.replace('/jixj/term3/p015', os.getcwd())
+        path = path.replace('/home/iquantela/Study/CarND-Capstone/training', os.getcwd())
         for member in root.findall('object'):
             value = (path,
                      #root.find('filename').text,

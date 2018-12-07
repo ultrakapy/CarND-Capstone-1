@@ -25,6 +25,21 @@ class TLDetector(object):
         self.camera_image = None
         self.lights = []
 
+        self.bridge = CvBridge()
+        self.light_classifier = TLClassifier()
+        self.listener = tf.TransformListener()
+
+        self.state = TrafficLight.UNKNOWN
+        self.last_state = TrafficLight.UNKNOWN
+        self.last_wp = -1
+        self.state_count = 0
+
+        self.waypoints_2d = None
+        self.waypoint_tree = None
+
+        self.img_count = 0
+
+
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
@@ -44,19 +59,6 @@ class TLDetector(object):
 
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
-        self.bridge = CvBridge()
-        self.light_classifier = TLClassifier()
-        self.listener = tf.TransformListener()
-
-        self.state = TrafficLight.UNKNOWN
-        self.last_state = TrafficLight.UNKNOWN
-        self.last_wp = -1
-        self.state_count = 0
-
-        self.waypoints_2d = None
-        self.waypoint_tree = None
-
-        self.img_count = 0
 
         rospy.spin()
 
@@ -93,7 +95,7 @@ class TLDetector(object):
             else:
                 img_path = "./light_classification/IMGS/UNKNOWN/" + file_name
 
-            cv2.imwrite(img_path, cv_image)
+            cv2.imwrite(img_path, cv_image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
 
         self.img_count += 1
 
@@ -107,6 +109,9 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
+
+        # save real track images.
+        #self.save_img(msg, 4)
 
         self.has_image = True
         self.camera_image = msg
@@ -143,7 +148,10 @@ class TLDetector(object):
 
         """
         #TODO implement
-        closest_idx = self.waypoint_tree.query([x,y], 1)[1]
+        closest_idx = None
+        if self.waypoint_tree:
+            closest_idx = self.waypoint_tree.query([x,y], 1)[1]
+
         return closest_idx
 
     def get_light_state(self, light):
@@ -160,14 +168,14 @@ class TLDetector(object):
         #    self.prev_light_loc = None
         #    return False
 
-        #cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
 
 
         #Get classification
-        #return self.light_classifier.get_classification(cv_image)
+        return self.light_classifier.get_classification(cv_image)
 
         # for testing we return the light state from the simulator
-        return light.state
+        #return light.state
 
     def process_traffic_lights(self):
         """Finds closest visible traffic light, if one exists, and determines its
@@ -198,8 +206,13 @@ class TLDetector(object):
 
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
-        if self.pose:
+        if self.pose and self.waypoints:
             car_wp_idx = self.get_closest_waypoint(self.pose.pose.position.x, self.pose.pose.position.y)
+
+            # if can not get the car pose , break
+            if not car_wp_idx:
+               return -1, TrafficLight.UNKNOWN
+
 
             diff = len(self.waypoints.waypoints)
             for i, light in enumerate(self.lights):
