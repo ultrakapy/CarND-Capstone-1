@@ -77,7 +77,11 @@ docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capst
 ### Port Forwarding
 To set up port forwarding, please refer to the [instructions from term 2](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/16cf4a78-4fc7-49e1-8621-3450ca938b77)
 
-### Usage
+### Prepare environment
+0. Install required packages
+```bash
+sudo apt-get install protobuf-compiler python-pil python-lxml python-tk
+```
 
 1. Clone the project repository
 ```bash
@@ -89,14 +93,50 @@ git clone https://github.com/udacity/CarND-Capstone.git
 cd CarND-Capstone
 pip install -r requirements.txt
 ```
-3. Make and run styx
+
+3. Clone TensorFlow's models repository from the tensorflow directory by executing
+```
+git clone https://github.com/tensorflow/models.git
+```
+
+4. Navigate to the models directory in the Command Prompt and execute
+```
+cd models
+
+git checkout f7e99c0
+
+```
+5. Navigate to the ./research folder and execute
+
+```
+wget -O protobuf.zip https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip
+unzip protobuf.zip
+./bin/protoc object_detection/protos/*.proto --python_out=.
+
+export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+
+python setup.py build
+sudo python setup.py install
+
+```
+
+6. Test environment. If no error, environment is ok
+```
+python object_detection/builders/model_builder_test.py
+
+python ./object_detection/exporter_test.py
+
+```
+
+### Start ROS and Simulator
+1. Make and run styx
 ```bash
 cd ros
 catkin_make
 source devel/setup.sh
 roslaunch launch/styx.launch
 ```
-4. Run the simulator
+2. Run the simulator
 
 ### Real world testing
 1. Download [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity self-driving car.
