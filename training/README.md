@@ -278,3 +278,21 @@ see [link](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4
    
 #### 4. image position
 ros/src/tl_detector/light_classification/IMGS/UNKNOWN
+  
+  
+  
+
+### Added labeled image monitor (2018-12-08)
+#### 1. in ros/src/tl_detector/light_classification/tl_classifier.py , enalbe SHOW_MONITOR_IMAGE and "import"s
+```
+# to show labeled image, for test only, if submit code to udacity, should be set SHOW_MONITOR_IMAGE = False and comment below "imort" lines.  
+# take a show: open a new terminal ,and run "rosrun image_view image_view image:=/clssifier_monitor_image"
+SHOW_MONITOR_IMAGE = True
+import visualization_utils as vis_util
+import rospy
+from sensor_msgs.msg import Image as Image_msg
+from cv_bridge import CvBridge
+```
+   
+#### 2. open a new terminal ,and run "rosrun image_view image_view image:=/clssifier_monitor_image"
+

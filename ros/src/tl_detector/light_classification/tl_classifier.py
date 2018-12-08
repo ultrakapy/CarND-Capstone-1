@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import visualization_utils as vis_util
 import label_map_util
 import tensorflow as tf
 import time
@@ -10,8 +9,19 @@ from graph_utils import load_graph
 from PIL import ImageDraw, Image
 from styx_msgs.msg import TrafficLight
 
+# to save monitor image for debug. if set True, uncomment "import visualization_utils as vis_util" please.
+# if "import visualization_utils" occurs error, for detail:https://github.com/MarkBroerkens/CarND-Capstone/blob/master/README.md#prepare-environment
+SAVE_MONITOR_IMAGE = False # to save monitor image for debug. 
+#import visualization_utils as vis_util
 
-SAVE_MONITOR_IMAGE = False # to save monitor image for debug.
+# to show labeled image, for test only, if submit code to udacity, should be set SHOW_MONITOR_IMAGE = False and comment below "imort" lines.  
+# take a show: open a new terminal ,and run "rosrun image_view image_view image:=/clssifier_monitor_image"
+SHOW_MONITOR_IMAGE = True
+import visualization_utils as vis_util
+import rospy
+from sensor_msgs.msg import Image as Image_msg
+from cv_bridge import CvBridge
+
 
 class TLClassifier(object):
     def __init__(self):
@@ -34,6 +44,13 @@ class TLClassifier(object):
         self.label_map = label_map_util.load_labelmap("./labelmap.pbtxt")
         self.categories = label_map_util.convert_label_map_to_categories(self.label_map, max_num_classes=self.num_classes, use_display_name=True)
         self.category_index = label_map_util.create_category_index(self.categories)
+
+        self.pub_tl_clssifier_monitor = None
+        self.bridge = None
+        if SHOW_MONITOR_IMAGE:
+            self.pub_tl_clssifier_monitor = rospy.Publisher('/clssifier_monitor_image', Image_msg, queue_size=2)
+            self.bridge = CvBridge()
+
 
 
     def get_classification(self, image, wp = 0):
@@ -77,9 +94,6 @@ class TLClassifier(object):
 
             vis_image = vis_util.visualize_boxes_and_labels_on_image_array(
                      image,
-                     #np.squeeze(boxes),
-                     #np.squeeze(classes).astype(np.int32),
-                     #np.squeeze(scores),
                      sq_boxes,
                      sq_classes,
                      sq_scores,
@@ -92,6 +106,21 @@ class TLClassifier(object):
             file_name = "Monitor_IMG_" + dt_str + '_'+ str(int(prediction - 1)) +'.png'
             output_filename = "light_classification/IMGS/tl_predict_output/" + file_name
             image_pil.save(output_filename, 'PNG')
+
+
+        if SHOW_MONITOR_IMAGE:
+            vis_image = vis_util.visualize_boxes_and_labels_on_image_array(
+                     image,
+                     sq_boxes,
+                     sq_classes,
+                     sq_scores,
+                     self.category_index,
+                     use_normalized_coordinates=True,
+                     line_thickness=1
+                     )
+
+            image_message = self.bridge.cv2_to_imgmsg(cv2.cvtColor(vis_image,cv2.COLOR_BGR2RGB), encoding="rgb8")
+            self.pub_tl_clssifier_monitor.publish(image_message)
 
         rtn = TrafficLight.UNKNOWN
 
