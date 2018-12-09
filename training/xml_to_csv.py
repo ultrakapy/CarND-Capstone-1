@@ -16,6 +16,7 @@ def xml_to_csv(pathlist):
         path = root.find('path').text
         path = path.replace('/jixj/term3/p015', os.getcwd())
         path = path.replace('/home/iquantela/Study/CarND-Capstone/training', os.getcwd())
+        path = path.replace('/jixj/term3/p055/training', os.getcwd())
         for member in root.findall('object'):
             value = (path,
                      #root.find('filename').text,

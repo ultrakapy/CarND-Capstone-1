@@ -4,6 +4,7 @@ import label_map_util
 import tensorflow as tf
 import time
 import cv2
+import datetime
 
 from graph_utils import load_graph
 from PIL import ImageDraw, Image
@@ -24,10 +25,15 @@ from cv_bridge import CvBridge
 
 
 class TLClassifier(object):
-    def __init__(self):
+    def __init__(self, is_site):
         #TODO load classifier
 
-        sess, _ = load_graph('models/sim_model.pb')
+        sess = None
+
+        if is_site:
+            sess, _ = load_graph('models/real_model.pb')
+        else:
+            sess, _ = load_graph('models/sim_model.pb')
 
         self.sess = sess
         self.sess_graph = self.sess.graph
@@ -45,12 +51,15 @@ class TLClassifier(object):
         self.categories = label_map_util.convert_label_map_to_categories(self.label_map, max_num_classes=self.num_classes, use_display_name=True)
         self.category_index = label_map_util.create_category_index(self.categories)
 
+        self.image_count = 0
+        self.last_pred = TrafficLight.UNKNOWN
         self.pub_tl_clssifier_monitor = None
         self.bridge = None
+
+
         if SHOW_MONITOR_IMAGE:
             self.pub_tl_clssifier_monitor = rospy.Publisher('/clssifier_monitor_image', Image_msg, queue_size=2)
             self.bridge = CvBridge()
-
 
 
     def get_classification(self, image, wp = 0):
@@ -65,7 +74,14 @@ class TLClassifier(object):
         """
         #TODO implement light color prediction
 
-        cv2_image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)        
+
+        # reduce image processing.
+        if self.image_count % 3 <> 0:
+            self.image_count += 1
+            return self.last_pred
+
+
+        cv2_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)        
         image_np_expanded = np.expand_dims(cv2_image, axis=0)
 
         (boxes, scores, classes) = self.sess.run([self.detection_boxes, self.detection_scores, self.detection_classes], feed_dict={self.image_tensor: image_np_expanded})
@@ -83,8 +99,7 @@ class TLClassifier(object):
                     print("find traffic light:%s  color:%s   pred_score:%s"%(prediction, str(self.category_index[sq_classes[i]]['name']), sq_scores[i]))
                     min_score_thresh = sq_scores[i] 
 
-
-
+       
         if SAVE_MONITOR_IMAGE: #or wp > 1900:
 
             dt_str = str(time.time()).replace('.','')
@@ -122,6 +137,7 @@ class TLClassifier(object):
             image_message = self.bridge.cv2_to_imgmsg(cv2.cvtColor(vis_image,cv2.COLOR_BGR2RGB), encoding="rgb8")
             self.pub_tl_clssifier_monitor.publish(image_message)
 
+
         rtn = TrafficLight.UNKNOWN
 
         if prediction == 1:
@@ -130,5 +146,8 @@ class TLClassifier(object):
             rtn = TrafficLight.YELLOW
         elif prediction == 3:
             rtn = TrafficLight.GREEN
+
+        self.last_pred = rtn
+        self.image_count += 1
 
         return rtn

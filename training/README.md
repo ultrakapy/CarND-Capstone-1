@@ -295,4 +295,30 @@ from cv_bridge import CvBridge
 ```
    
 #### 2. open a new terminal ,and run "rosrun image_view image_view image:=/clssifier_monitor_image"
+  
+  
+### Real Car track traffic light detector Test (2018-12-09)
+
+#### Download traffic_light_bag_files.zip file from [here](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view?usp=sharing)
+#### Open a terminal, unzip traffic_light_bag_files.zip file get "just_traffic_light.bag" and "loop_with_traffic_light.bag"
+#### Open a terminal, Navigate to CarND-Capstone/ros folder, implement:
+```
+roslaunch launch/site.launch
+```
+#### Open a terminal, Load bagfile 
+```
+rosbag play -l just_traffic_light.bag
+``` 
+#### Open a terminal, Monitor image_raw
+```
+rosrun image_view image_view image:=/image_raw
+```
+#### Open a terminal, Monitor predict image
+```
+rosrun image_view image_view image:=/clssifier_monitor_image
+```
+
+
+
+
 
