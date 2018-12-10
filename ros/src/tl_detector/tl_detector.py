@@ -116,15 +116,11 @@ class TLDetector(object):
 
         """
 
-        if self.is_site:# site package
-            if self.light_classifier:
+        if self.light_classifier:
+            if self.is_site:# site package
                 # save real track images.
                 self.save_img(msg, 4)
-                cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-                state = self.light_classifier.get_classification(cv_image)
-                rospy.logwarn("in site rosbag  the light pred state: {0}".format(state))
 
-        else:
             self.has_image = True
             self.camera_image = msg
             light_wp, state = self.process_traffic_lights()
