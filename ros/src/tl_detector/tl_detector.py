@@ -14,7 +14,7 @@ from scipy.spatial import KDTree
 import time
 
 STATE_COUNT_THRESHOLD = 3
-SAVE_TRAFFIC_LIGHT_IMG = True # Save traffic images to train classifier model.
+SAVE_TRAFFIC_LIGHT_IMG = False # Save traffic images to train classifier model.
 
 class TLDetector(object):
     def __init__(self):

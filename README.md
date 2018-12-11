@@ -32,10 +32,44 @@ This package contains the waypoint updater node
 ## /ros/src/twist_controller/
 Carla is equipped with a drive-by-wire (dbw) system, meaning the throttle, brake, and steering have electronic control. This package contains the files that are responsible for control of the vehicle
 ![image alt text](imgs/dbw-node-ros-graph.png)
+  
+  
+# Training steps
+Below is a brief overview of the traffic light detector training.
+
+## 1. Get the SSD model from [Tensorflow detection model zoo](http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_11_06_2017.tar.gz)
+Graph of the SSD model:
+<div class="test">
+<img src="imgs/ssd_graph.png" width="600" />
+</div>
+
+## 2. Get and Annotate traffic light images for training.
+Get training images from simulator and rosbag(real track) file.
+<div class="test">
+<img src="imgs/training_sim_image.png" width="400" />
+<img src="imgs/training_real_image.png" width="400" />
+</div>
 
 
+## 3. Train the SSD model by annotated images, get sim_model.pb and real_model.pb file finally.
+Main hyperparameter:  
+```
+batch_size: 10  
+reshape:(300, 300)  
+num_steps:10000  
+optimizer_learning_rate: 0.004  
+num_classes: 3  
+```
+<div class="test">
+<img src="imgs/ssd_training_loss.png" width="600" />
+</div>
 
-
+## 4. Use trained model to predict simulator and real track traffic light.
+The traffic light prediction visualization:
+<div class="test">
+<img src="imgs/prediction_sim_image.png" width="400" />
+<img src="imgs/prediction_real_image.png" width="400" />
+</div>
 
 
 # from original Readme 
@@ -94,6 +128,7 @@ cd CarND-Capstone
 pip install -r requirements.txt
 ```
 
+#### OPTION(Below 3-6 steps are not required by default , just use in debug )
 3. Clone TensorFlow's models repository from the tensorflow directory by executing
 ```
 git clone https://github.com/tensorflow/models.git

@@ -17,11 +17,11 @@ SAVE_MONITOR_IMAGE = False # to save monitor image for debug.
 
 # to show labeled image, for test only, if submit code to udacity, should be set SHOW_MONITOR_IMAGE = False and comment below "imort" lines.  
 # take a show: open a new terminal ,and run "rosrun image_view image_view image:=/clssifier_monitor_image"
-SHOW_MONITOR_IMAGE = True
-import visualization_utils as vis_util
-import rospy
-from sensor_msgs.msg import Image as Image_msg
-from cv_bridge import CvBridge
+SHOW_MONITOR_IMAGE = False
+#import visualization_utils as vis_util
+#import rospy
+#from sensor_msgs.msg import Image as Image_msg
+#from cv_bridge import CvBridge
 
 
 class TLClassifier(object):
