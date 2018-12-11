@@ -164,14 +164,30 @@ python ./object_detection/exporter_test.py
 ```
 
 ### Start ROS and Simulator
-1. Make and run styx
+1. Make ROS workspace
 ```bash
 cd ros
 catkin_make
 source devel/setup.sh
+```
+
+2. Run ROS for Highway Track
+```
 roslaunch launch/styx.launch
 ```
-2. Run the simulator
+
+3. Run the simulator and select the *Highway* track
+
+#### OPTION (execute steps 4-5 instead of 2-3 for running the car on the *Test Lot*)  
+
+4. Run ROS for Test Lot Track
+```
+roslaunch launch/styx_sim_testlot.launch
+```
+
+5. Run the simulator and select the *Test Lot* track
+
+
 
 ### Real world testing
 1. Download [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity self-driving car.
