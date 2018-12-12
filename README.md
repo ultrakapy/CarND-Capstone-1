@@ -8,7 +8,7 @@ This project uses ROS nodes to implement core functionality of the autonomous ve
 # Team Santa Claus
 * Mark Brörkens: broerkens (at) gmail.com
 * Kapy Kangombe: kapambwe (at) gmail.com
-* Utkarsh Dubey: utkarsh.dubey.2 (at) gmail.com
+* Utkarsh Dubey: utkarsh.dubey.26 (at) gmail.com
 * Ji xiaojie: 33048399 (at) QQ.com
 * Hapa Hassan: heba.ali90 (at) gmail.com
 
@@ -72,7 +72,7 @@ The traffic light prediction visualization:
 </div>
 
 
-# from original Readme 
+# Installation and Exceution Instructions
 
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
@@ -112,10 +112,6 @@ docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capst
 To set up port forwarding, please refer to the [instructions from term 2](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/16cf4a78-4fc7-49e1-8621-3450ca938b77)
 
 ### Prepare environment
-0. Install required packages
-```bash
-sudo apt-get install protobuf-compiler python-pil python-lxml python-tk
-```
 
 1. Clone the project repository
 ```bash
@@ -128,20 +124,31 @@ cd CarND-Capstone
 pip install -r requirements.txt
 ```
 
-#### OPTION(Below 3-6 steps are not required by default , just use in debug )
-3. Clone TensorFlow's models repository from the tensorflow directory by executing
+#### OPTION(Below 3-8 steps are not required by default, just use in debug )
+3. Install required packages
+```bash
+sudo apt-get install protobuf-compiler python-pil python-lxml python-tk
+```
+
+4. Install python dependencies
+```bash
+cd CarND-Capstone
+pip install -r requirements.txt
+```
+
+5. Clone TensorFlow's models repository from the tensorflow directory by executing
 ```
 git clone https://github.com/tensorflow/models.git
 ```
 
-4. Navigate to the models directory in the Command Prompt and execute
+6. Navigate to the models directory in the Command Prompt and execute
 ```
 cd models
 
 git checkout f7e99c0
 
 ```
-5. Navigate to the ./research folder and execute
+7. Navigate to the ./research folder and execute
 
 ```
 wget -O protobuf.zip https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip
@@ -155,7 +162,7 @@ sudo python setup.py install
 
 ```
 
-6. Test environment. If no error, environment is ok
+8. Test environment. If no error, environment is ok
 ```
 python object_detection/builders/model_builder_test.py
 
