@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import label_map_util
 import tensorflow as tf
 import time
 import cv2
@@ -47,9 +46,7 @@ class TLClassifier(object):
         self.detection_classes = self.sess_graph.get_tensor_by_name('detection_classes:0')
         self.num_classes = 3
 
-        self.label_map = label_map_util.load_labelmap("./labelmap.pbtxt")
-        self.categories = label_map_util.convert_label_map_to_categories(self.label_map, max_num_classes=self.num_classes, use_display_name=True)
-        self.category_index = label_map_util.create_category_index(self.categories)
+        self.category_index = {1: {'id': 1, 'name': u'red'}, 2: {'id': 2, 'name': u'yellow'}, 3: {'id': 3, 'name': u'green'}}
 
         self.image_count = 0
         self.last_pred = TrafficLight.UNKNOWN
@@ -100,7 +97,7 @@ class TLClassifier(object):
                     min_score_thresh = sq_scores[i] 
 
        
-        if SAVE_MONITOR_IMAGE: #or wp > 1900:
+        if SAVE_MONITOR_IMAGE: 
 
             dt_str = str(time.time()).replace('.','')
             file_name = "Monitor_IMG_" + dt_str + '_'+ str(int(prediction - 1)) +'.jpg'

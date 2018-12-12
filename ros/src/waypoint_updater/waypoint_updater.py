@@ -45,6 +45,7 @@ class WaypointUpdater(object):
         # TODO: Add other member variables you need below
         self.pose = None
         self.base_waypoints = None
+        self.base_waypoints_length = 0
         self.waypoints_2d = None
         self.waypoint_tree = None
 
@@ -97,22 +98,46 @@ class WaypointUpdater(object):
 
         closest_idx = self.get_closest_waypoint_idx()
         farthest_idx = closest_idx + LOOKAHEAD_WPS
-        base_waypoints = self.base_lane.waypoints[closest_idx:farthest_idx]
+        num_over_max_wp = max(0, farthest_idx - self.base_waypoints_length)
+        base_waypoints = []
+        base_waypoints_origin_pos = []
+        current_vel = self.base_lane.waypoints[closest_idx].twist.twist.linear.x 
+        
+        for i in range(closest_idx, farthest_idx - num_over_max_wp):
+            p = self.base_lane.waypoints[i]
+            if p.twist.twist.linear.x < current_vel:
+                p.twist.twist.linear.x = current_vel
+           
+            base_waypoints.append(p)
+            base_waypoints_origin_pos.append(i)
+        
+        
 
-        if self.stopline_wp_idx == -1 or (self.stopline_wp_idx >= farthest_idx):
+        if num_over_max_wp <> 0:
+
+            for i in range(0, num_over_max_wp):
+                p = self.base_lane.waypoints[i]
+                if p.twist.twist.linear.x < current_vel:
+                    p.twist.twist.linear.x = current_vel
+           
+                base_waypoints.append(p)
+                base_waypoints_origin_pos.append(i)
+
+        if self.stopline_wp_idx == -1 or (self.stopline_wp_idx not in base_waypoints_origin_pos):
             lane.waypoints = base_waypoints
         else:
-            lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+            lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx, base_waypoints_origin_pos)
 
+        rospy.loginfo("test: len(final_waypoints): %s", len(lane.waypoints))
         return lane
 
-    def decelerate_waypoints(self, waypoints, closest_idx):
+    def decelerate_waypoints(self, waypoints, closest_idx, base_waypoints_origin_pos):
         temp = []
         for i, wp in enumerate(waypoints):
             p = Waypoint()
             p.pose = wp.pose
 
-            stop_idx = max(self.stopline_wp_idx - closest_idx -2, 0) # Two waypoints back from line so front of car at line
+            stop_idx = max(base_waypoints_origin_pos.index(self.stopline_wp_idx) - 3, 0) # Two waypoints back from line so front of car at line
             dist = self.distance(waypoints, i, stop_idx)
 
             # TODO we could use another algorithm. see 12. Full Waypoint Walkthrough 7:00
@@ -121,6 +146,7 @@ class WaypointUpdater(object):
                 vel = 0.
 
             p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x)
+
             temp.append(p)
 
         return temp
@@ -135,6 +161,9 @@ class WaypointUpdater(object):
         if not self.waypoints_2d:
             self.waypoints_2d = [[waypoint.pose.pose.position.x , waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints]
             self.waypoint_tree = KDTree(self.waypoints_2d)
+
+        if self.base_waypoints_length == 0:
+            self.base_waypoints_length = len(self.base_waypoints.waypoints)
 
     def traffic_cb(self, msg):
         self.stopline_wp_idx = msg.data
