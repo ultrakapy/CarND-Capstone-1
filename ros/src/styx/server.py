@@ -62,8 +62,10 @@ def image(sid, data):
 if __name__ == '__main__':
 
     # wrap Flask application with engineio's middleware
-    #app = socketio.Middleware(sio, app)
-    app = socketio.WSGIApp(sio, app)
+    if socketio.__version__ == '1.6.1':
+        app = socketio.Middleware(sio, app)
+    else:
+        app = socketio.WSGIApp(sio, app)
 
     # deploy as an eventlet WSGI server
     eventlet.wsgi.server(eventlet.listen(('', 4567)), app)
