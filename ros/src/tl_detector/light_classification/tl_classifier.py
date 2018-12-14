@@ -69,14 +69,6 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        #TODO implement light color prediction
-
-
-        # reduce image processing.
-        if self.image_count % 3 <> 0:
-            self.image_count += 1
-            return self.last_pred
-
 
         cv2_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)        
         image_np_expanded = np.expand_dims(cv2_image, axis=0)

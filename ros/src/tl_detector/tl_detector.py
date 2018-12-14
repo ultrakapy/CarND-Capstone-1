@@ -13,7 +13,8 @@ import yaml
 from scipy.spatial import KDTree
 import time
 
-STATE_COUNT_THRESHOLD = 3
+STATE_COUNT_THRESHOLD = 2
+TL_DETECTION_DISTANCE = 50 # number of waypoints before the next traffic light where traffic light is enabled
 SAVE_TRAFFIC_LIGHT_IMG = False # Save traffic images to train classifier model.
 
 class TLDetector(object):
@@ -23,6 +24,7 @@ class TLDetector(object):
         self.pose = None
         self.waypoints = None
         self.camera_image = None
+        self.has_image = False
         self.lights = []
 
         self.bridge = CvBridge()
@@ -56,7 +58,7 @@ class TLDetector(object):
         rely on the position of the light and the camera image to predict it.
         '''
         sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
-        # TODO we might want to use image_raw here
+        
         sub6 = None
         if self.is_site: 
             sub6 = rospy.Subscriber('/image_raw', Image, self.image_cb)
@@ -66,8 +68,10 @@ class TLDetector(object):
 
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
-
-        rospy.spin()
+        detector_rate = rospy.Rate(5)
+        while not rospy.is_shutdown():
+            self.find_traffic_lights()
+            detector_rate.sleep()
 
     def pose_cb(self, msg):
         self.pose = msg
@@ -106,8 +110,15 @@ class TLDetector(object):
 
         self.img_count += 1
 
-
     def image_cb(self, msg):
+        """ updates the current image
+        Args:
+            msg (Image): image from car-mounted camera
+        """
+        self.has_image = True
+        self.camera_image = msg
+        
+    def find_traffic_lights(self):
         """Identifies red lights in the incoming camera image and publishes the index
             of the waypoint closest to the red light's stop line to /traffic_waypoint
 
@@ -116,13 +127,11 @@ class TLDetector(object):
 
         """
 
-        if self.light_classifier:
+        if self.light_classifier and self.has_image == True:
             if self.is_site:# site package
                 # save real track images.
-                self.save_img(msg, 4)
+                self.save_img(self.camera_image, 4)
 
-            self.has_image = True
-            self.camera_image = msg
             light_wp, state = self.process_traffic_lights()
             # rospy.logwarn("Closest light wp: {0} \n And light state: {1}".format(light_wp, state))
 
@@ -222,27 +231,29 @@ class TLDetector(object):
                return -1, TrafficLight.UNKNOWN
 
 
-            diff = len(self.waypoints.waypoints)
+            min_diff = min(len(self.waypoints.waypoints), TL_DETECTION_DISTANCE)
             for i, light in enumerate(self.lights):
                 # Get stop line waypoint index
                 line = stop_line_positions[i]
                 temp_wp_idx = self.get_closest_waypoint(line[0], line[1]) # x,y
                 # Find closest step line waypoint index
                 d = temp_wp_idx - car_wp_idx
-                if d >= 0 and d < diff:
-                    diff = d
+                if d >= 0 and d < min_diff:
+                    min_diff = d
                     closest_light = light
                     line_wp_idx = temp_wp_idx
-
-                if d < 70: # when close traffic light , save image
-                    # To save trainning image
-                    self.save_img(self.camera_image, light.state)
+                
+                    # DEBUG
+                    if d < 70: # when close traffic light , save image
+                        # To save trainning image
+                        self.save_img(self.camera_image, light.state)
 
         if closest_light:
             state = self.get_light_state(closest_light)
+            rospy.loginfo('closest light wp %i with color %i', line_wp_idx, state )
             return line_wp_idx, state
-        else:
-            state = self.get_light_state(self.camera_image)
+        #else:
+            #state = self.get_light_state(self.camera_image)
 
         return -1, TrafficLight.UNKNOWN
 
