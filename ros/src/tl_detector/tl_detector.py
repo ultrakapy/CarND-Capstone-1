@@ -14,7 +14,7 @@ from scipy.spatial import KDTree
 import time
 
 STATE_COUNT_THRESHOLD = 2
-TL_DETECTION_DISTANCE = 50 # number of waypoints before the next traffic light where traffic light is enabled
+TL_DETECTION_DISTANCE = 120 # number of waypoints before the next traffic light where traffic light is enabled
 SAVE_TRAFFIC_LIGHT_IMG = False # Save traffic images to train classifier model.
 
 class TLDetector(object):
@@ -250,12 +250,10 @@ class TLDetector(object):
 
         if closest_light:
             state = self.get_light_state(closest_light)
-            rospy.loginfo('closest light wp %i with color %i', line_wp_idx, state )
+            # rospy.loginfo('closest light wp %i with color %i', line_wp_idx, state )
             return line_wp_idx, state
-        #else:
-            #state = self.get_light_state(self.camera_image)
-
-        return -1, TrafficLight.UNKNOWN
+        else:
+            return -1, TrafficLight.UNKNOWN
 
 
                      
