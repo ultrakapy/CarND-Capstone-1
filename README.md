@@ -1,53 +1,111 @@
+## The CarND Capstone Project
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-# The CarND Capstone Project
 This project uses ROS nodes to implement core functionality of the autonomous vehicle system, including traffic light detection, control, and waypoint following! The code is tested using the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases) and is executed on the Udacity self-driving car Carla.
 
 ![image alt text](imgs/Udacity-Carla.jpg)
 
-# Team Santa Claus
-* Mark Brörkens: broerkens (at) gmail.com
+### Results
+The following video shows Carla autonomously driving along the simulated highway track. 
+[![Scenario Highway in Simulator](https://img.youtube.com/vi/tZso-BjW6cQ/0.jpg)](https://www.youtube.com/watch?v=tZso-BjW6cQ)
+
+The sections within the video:
+* **top left**: */image_color* the image that is published by the camera
+* **top right**: a visualization of ROS topics 
+  * white line: */base_waypoints* - the road according to a map 
+  * balls red/yellow/green: */vehicle/traffic_lights* - ground truth status and location of the traffic lights (for debugging, from simulator)
+  * green line: */final_waypoints* - the next waypoints the car should follow
+  * blue cone: */current_pose* - location and orientation of the car
+* **bottom left**: result from traffic light detection including prediction score
+* **bottom right**: simulator 
+
+*Note: Find the latest version of this project on
+[Github](https://github.com/markbroerkens/CarND-Capstone).*
+
+
+### Team Members
+* Mark Brörkens: broerkens (at) gmail.com (team lead)
 * Kapy Kangombe: kapambwe (at) gmail.com
 * Utkarsh Dubey: utkarsh.dubey.26 (at) gmail.com
 * Ji xiaojie: 33048399 (at) QQ.com
 * Hapa Hassan: heba.ali90 (at) gmail.com
 
-# Results
-[![Scenario Highway in Simulator](https://img.youtube.com/vi/tZso-BjW6cQ/0.jpg)](https://www.youtube.com/watch?v=tZso-BjW6cQ)
+### Discussion and Outlook
+The car follows the track very well if the hardware is powerful enough. The results video was created on a MacBook Pro with 2,8HHz intel Core i7. ROS was executed in the Linux VM from Udacity using VMWare Fusion. The Simulator was executed natively in Mac.
+
+We did not manage to get the ROS code and simulator running in the Udacity Workspace. There seemed to be some delay between ROS and the simulator which resulted in leaving the track.
+
+In order to reduce the load, we implemented the following tricks:
+  * reduced the traffic light detection rate to 5 Hz
+  * reduced the frequency if published images by the bridge to the simulator
+  * disabled publishing of lidar and obstacles data
+  
+As a next step we could try to further improve the timing of the nodes and try to reduce ceffort for computation and communication.
 
 
-# System Architecture
+## System Architecture
 Description from Udacity Classroom
-The following is a system architecture diagram showing the ROS nodes and topics used in the project. You can refer to the diagram throughout the project as needed. The ROS nodes and topics shown in the diagram are described briefly in the Code Structure section below, and more detail is provided for each node in later classroom concepts of this lesson.
+The following is a system architecture diagram showing the ROS nodes and topics used in the project. The ROS nodes and topics shown in the diagram are described briefly in the Code Structure section below.
 
 ![image alt text](imgs/final-project-ros-graph-v2.png)
 
-# Code Structure
+### Code Structure
 Below is a brief overview of the repo structure, along with descriptions of the ROS nodes. 
 
-##  /ros/src/tl_detector/
+#### Traffic Light Detection Node
 This package contains the traffic light detection node.
 ![image alt text](imgs/tl-detector-ros-graph.png)
 
-## /ros/src/waypoint_updater/
+See training code in [/training/](https://github.com/markbroerkens/CarND-Capstone/tree/master/training/) and inference code in 
+[/ros/src/tl_detector/](https://github.com/markbroerkens/CarND-Capstone/tree/master/ros/src/tl_detector/).
+
+
+#### Waypoint Updater Node
 This package contains the waypoint updater node
 ![image alt text](imgs/waypoint-updater-ros-graph.png)
 
-## /ros/src/twist_controller/
+See code in [/ros/src/waypoint_updater/](https://github.com/markbroerkens/CarND-Capstone/tree/master/ros/src/waypoint_updater/).
+
+
+#### Drive By Wire (DBW) Node
 Carla is equipped with a drive-by-wire (dbw) system, meaning the throttle, brake, and steering have electronic control. This package contains the files that are responsible for control of the vehicle
 ![image alt text](imgs/dbw-node-ros-graph.png)
+
+See code in [/ros/src/twist_controller/](https://github.com/markbroerkens/CarND-Capstone/tree/master/ros/src/twist_controller/).
+
+#### ROS to Simulator Bridge Node
+A package that contains a server for communicating with the simulator, and a bridge to translate and publish simulator messages to ROS topics.
+
+See code in [/ros/src/styx/](https://github.com/markbroerkens/CarND-Capstone/tree/master/ros/src/styx/).
+
+#### Waypoint Loader Node
+A package which loads the static waypoint data and publishes to */base_waypoints*
+
+See code in [/ros/src/waypoint_loader/](https://github.com/markbroerkens/CarND-Capstone/tree/master/ros/src/waypoint_loader/).
+
   
-  
-# Training steps
+#### Waypoint Follower Node
+A package containing code from [Autoware](https://github.com/CPFL/Autoware) which subscribes to */final_waypoints* and publishes target vehicle linear and angular velocities in the form of twist commands to the */twist_cmd* topic.
+
+See code in [/ros/src/waypoint_follower/](https://github.com/markbroerkens/CarND-Capstone/tree/master/ros/src/waypoint_follower/).
+
+
+#### (debug) Visualisation Node
+See code in [/ros/src/visualisation/](https://github.com/markbroerkens/CarND-Capstone/tree/master/ros/src/visualisation/).
+
+*Thanks to [Eric Lavigne and Team-Wolf-Pack](https://github.com/ericlavigne/CarND-Capstone-Wolf-Pack) for their inspiring ideas regarding the visualization.*
+
+
+## Training steps
 Below is a brief overview of the traffic light detector training.
 
-## 1. Get the SSD model from [Tensorflow detection model zoo](http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_11_06_2017.tar.gz)
+#### 1. Get the SSD model from [Tensorflow detection model zoo](http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_11_06_2017.tar.gz)
 Graph of the SSD model:
 <div class="test">
 <img src="imgs/ssd_graph.png" width="600" />
 </div>
 
-## 2. Get and Annotate traffic light images for training.
+#### 2. Get and Annotate traffic light images for training.
 Get training images from simulator and rosbag(real track) file.
 <div class="test">
 <img src="imgs/training_sim_image.png" width="400" />
@@ -55,7 +113,7 @@ Get training images from simulator and rosbag(real track) file.
 </div>
 
 
-## 3. Train the SSD model by annotated images, get sim_model.pb and real_model.pb file finally.
+#### 3. Train the SSD model by annotated images, get sim_model.pb and real_model.pb file finally.
 Main hyperparameter:  
 ```
 batch_size: 10  
@@ -68,7 +126,7 @@ num_classes: 3
 <img src="imgs/ssd_training_loss.png" width="600" />
 </div>
 
-## 4. Use trained model to predict simulator and real track traffic light.
+#### 4. Use trained model to predict simulator and real track traffic light.
 The traffic light prediction visualization:
 <div class="test">
 <img src="imgs/prediction_sim_image.png" width="400" />
@@ -76,7 +134,10 @@ The traffic light prediction visualization:
 </div>
 
 
-# Installation and Exceution Instructions
+See details on the training code please refer to README.md in [/training/](https://github.com/markbroerkens/CarND-Capstone/tree/master/training/README.md)
+
+
+## Installation and Execution Instructions
 
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
@@ -178,7 +239,7 @@ python ./object_detection/exporter_test.py
 1. Make ROS workspace
 ```bash
 cd ros
-catkin_make
+./rebuild-all.sh
 source devel/setup.sh
 ```
 
@@ -198,6 +259,13 @@ roslaunch launch/styx_sim_testlot.launch
 
 5. Run the simulator and select the *Test Lot* track
 
+### Start ROS visualisation
+While ROS and the simulator are running, you can start the visualisation from a new terminal window:
+```bash
+cd ros
+source devel/setup.sh
+roslaunch src/visualisation/launch/visualization.launch
+```
 
 
 ### Real world testing
