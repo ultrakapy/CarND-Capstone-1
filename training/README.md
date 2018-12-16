@@ -1,4 +1,5 @@
 # CarND-Capstone-Training
+**Note: The training data is available in a separate github repository: [CarND-Capstone-Training](https://github.com/MarkBroerkens/CarND-Capstone-Training)
 ### 1.Images(2018-12-01):
 #### SimulatorTrack1_Classified_Imgs
 RED: 706   

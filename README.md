@@ -31,7 +31,7 @@ The sections within the video:
 * Hapa Hassan: heba.ali90 (at) gmail.com
 
 ### Discussion and Outlook
-The car follows the track very well if the hardware is powerful enough. The results video was created on a MacBook Pro with 2,8HHz intel Core i7. ROS was executed in the Linux VM from Udacity using VMWare Fusion. The Simulator was executed natively in Mac.
+The car follows the track very well if the hardware is powerful enough. The results video was created on a MacBook Pro with 2,8 GHz Intel Core i7. ROS was executed in the Linux VM from Udacity using VMWare Fusion. The Simulator was executed natively in Mac.
 
 We did not manage to get the ROS code and simulator running in the Udacity Workspace. There seemed to be some delay between ROS and the simulator which resulted in leaving the track.
 
