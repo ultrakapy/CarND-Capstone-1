@@ -85,7 +85,7 @@ class TLClassifier(object):
             if sq_scores is None or sq_scores[i] > min_score_thresh:
                 if sq_classes[i] in self.category_index.keys():
                     prediction = sq_classes[i]
-                    print("find traffic light:%s  color:%s   pred_score:%s"%(prediction, str(self.category_index[sq_classes[i]]['name']), sq_scores[i]))
+                    print("Found traffic light: {ID:%s  color:%s  pred_score:%.4f}"%(prediction, str(self.category_index[sq_classes[i]]['name']), sq_scores[i]))
                     min_score_thresh = sq_scores[i] 
 
        
