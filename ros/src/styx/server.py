@@ -21,6 +21,8 @@ msgs = []
 dbw_enable = False
 imageCount = 0
 SKIP_IMAGES = 4
+dbw_Count = 0
+SKIP_dbw = 10
 
 @sio.on('connect')
 def connect(sid, environ):
@@ -36,9 +38,14 @@ bridge = Bridge(conf, send)
 @sio.on('telemetry')
 def telemetry(sid, data):
     global dbw_enable
-    if data["dbw_enable"] != dbw_enable:
+    global dbw_Count
+    # if data["dbw_enable"] != dbw_enable:    
+    dbw_Count += 1
+    if dbw_Count >= SKIP_dbw:
         dbw_enable = data["dbw_enable"]
         bridge.publish_dbw_status(dbw_enable)
+        dbw_Count = 0
+        
     bridge.publish_odometry(data)
     for i in range(len(msgs)):
         topic, data = msgs.pop(0)

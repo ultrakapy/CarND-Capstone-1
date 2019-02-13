@@ -112,6 +112,12 @@ class WaypointUpdater(object):
 
         return lane
 
+    def decel_vel(self, x):        
+        vel = 1/(1+math.exp(-x)) - 0.7 
+        if vel < 0:
+            vel = 0
+        return vel
+
     def decelerate_waypoints(self, waypoints, closest_idx):
         temp = []
         dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2  + (a.z-b.z)**2)
@@ -131,8 +137,8 @@ class WaypointUpdater(object):
 
             wp_vel = wp.twist.twist.linear.x
             # if the car's position far from the closest waypoint, set a lower velocity.
-            if self.current_vel > 0.5 and dist_car_to_wp > 1.5:
-                wp_vel = min(wp.twist.twist.linear.x, self.current_vel)
+            if stop_idx <= 5:                
+                wp_vel = min(wp_vel, self.decel_vel(vel))
 
             p.twist.twist.linear.x = min(vel, wp_vel)
             temp.append(p)
