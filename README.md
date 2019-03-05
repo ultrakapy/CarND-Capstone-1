@@ -6,7 +6,7 @@ This project uses ROS nodes to implement core functionality of the autonomous ve
 ![image alt text](imgs/Udacity-Carla.jpg)
 
 ### Results
-The following video shows Carla autonomously driving along the simulated highway track. 
+The following video shows Carla autonomously driving along the *simulated highway track*. 
 [![Scenario Highway in Simulator](https://img.youtube.com/vi/tZso-BjW6cQ/0.jpg)](https://www.youtube.com/watch?v=tZso-BjW6cQ)
 
 The sections within the video:
@@ -18,6 +18,10 @@ The sections within the video:
   * blue cone: */current_pose* - location and orientation of the car
 * **bottom left**: result from traffic light detection including prediction score
 * **bottom right**: simulator 
+
+The following video shows how our code runs a real self driving car with traffic light detection.
+[![Real Sefl-Driving Car](https://img.youtube.com/vi/bWpKIwP68RE/0.jpg)](https://www.youtube.com/watch?v=bWpKIwP68RE)
+
 
 *Note: Find the latest version of this project on
 [Github](https://github.com/markbroerkens/CarND-Capstone).*
